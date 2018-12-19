@@ -1,10 +1,15 @@
 FROM logomotion/base
 
-RUN apk add --no-cache php7 php7-xml php7-zip \
-    php7-mbstring php7-pdo_mysql php7-json php7-phar \
-    php7-ctype php7-dom php7-xmlwriter php7-tokenizer \
-    php7-iconv php7-session php7-simplexml php7-intl \
-    php7-curl gettext wget
+ENV DEBIAN_FRONTEND=noninteractive
+ENV TZ=Europe/Paris
+RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
+RUN add-apt-repository -y ppa:ondrej/php && apt update
+RUN apt install -y --no-install-recommends \
+    php5.6 php5.6-fpm php5.6-xml php5.6-zip \
+    php5.6-mbstring php5.6-mysql php5.6-json php5.6-phar \
+    php5.6-ctype php5.6-dom php5.6-xmlwriter php5.6-tokenizer \
+    php5.6-iconv php5.6-simplexml php5.6-intl \
+    php5.6-curl gettext
 RUN wget https://raw.githubusercontent.com/composer/getcomposer.org/1b137f8bf6db3e79a38a5bc45324414a6b1f9df2/web/installer -O install-composer.php 
 RUN php install-composer.php && mv composer.phar /usr/local/bin/composer
 RUN wget -O phpunit https://phar.phpunit.de/phpunit-7.phar
