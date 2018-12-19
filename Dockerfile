@@ -2,6 +2,10 @@ FROM logomotion/base
 
 ENV DEBIAN_FRONTEND=noninteractive
 ENV TZ=Europe/Paris
+ENV WEB_USER=www-data
+ENV WEB_GROUP=www-data
+ENV PHP_ROOT_DIR=/usr/local/etc
+
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 RUN add-apt-repository -y ppa:ondrej/php && apt update
 RUN apt install -y --no-install-recommends \
@@ -16,3 +20,9 @@ RUN wget -O phpunit https://phar.phpunit.de/phpunit-7.phar
 RUN mv phpunit /usr/local/bin/phpunit
 RUN chmod +x /usr/local/bin/phpunit
 RUN composer global require hirak/prestissimo
+
+COPY www.conf $PHP_ROOT_DIR/php-fpm.d/www.conf
+
+RUN usermod -u 1000 $WEB_USER \
+ && groupmod -g 1000 $WEB_GROUP \
+ && chgrp -R staff $PHP_ROOT_DIR/php-fpm.d/www.conf
