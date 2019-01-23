@@ -8,7 +8,7 @@ ARG GROUP_ID
 COPY www.conf /srv/app/php-fpm.d/www.conf
 
 RUN apt-get update
-RUN apt-get install -y --no-install-recommends libxml2-dev curl openssl
+RUN apt-get install -y --no-install-recommends libxml2-dev curl openssl libpng-dev git
 RUN docker-php-ext-install mysqli
 RUN docker-php-ext-install mbstring
 RUN docker-php-ext-install json
@@ -20,6 +20,7 @@ RUN docker-php-ext-install simplexml
 RUN docker-php-ext-install intl 
 RUN docker-php-ext-install pdo
 RUN docker-php-ext-install pdo_mysql
+RUN docker-php-ext-install gd
 
 ENV TZ=Europe/Paris
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
