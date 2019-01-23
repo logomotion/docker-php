@@ -2,8 +2,8 @@ FROM php:5.6-fpm
  
 ARG WEB_USER=www-data
 ARG WEB_GROUP=www-data
-ARG USER_ID=1000
-ARG GROUP_ID=1000
+ARG USER_ID
+ARG GROUP_ID
  
 COPY www.conf /srv/app/php-fpm.d/www.conf
 
@@ -42,6 +42,8 @@ RUN if [ ${USER_ID:-0} -ne 0 ] && [ ${GROUP_ID:-0} -ne 0 ]; then \
         
 USER www-data
 
-RUN usermod -u 1000 ${WEB_USER} \
- && groupmod -g 1000 ${WEB_GROUP} \
- && chgrp -R staff /srv/app/php-fpm.d/www.conf
+RUN if [ ${USER_ID:-0} -ne 0 ] && [ ${GROUP_ID:-0} -ne 0 ]; then \
+  usermod -u 1000 ${WEB_USER} \
+  && groupmod -g 1000 ${WEB_GROUP} \
+  && chgrp -R staff /srv/app/php-fpm.d/www.conf \
+ ;fi
