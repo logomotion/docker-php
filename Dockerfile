@@ -1,7 +1,5 @@
 FROM php:7.2-fpm
  
-COPY www.conf /srv/app/php-fpm.d/www.conf
-
 RUN apt-get update
 RUN apt-get install -y --no-install-recommends libxml2-dev curl openssl libpng-dev git
 RUN docker-php-ext-install mysqli
@@ -21,5 +19,15 @@ ENV TZ=Europe/Paris
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 RUN printf '[PHP]\ndate.timezone = "${TZ}"\n' > /usr/local/etc/php/conf.d/tzone.ini
 
+# Install Composer
+RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+RUN composer --version
+RUN composer global require hirak/prestissimo
+
+RUN echo 'alias sf="php bin/console"' >> ~/.bashrc
+
+COPY www.conf /etc/php/7.2/pool.d/www.conf
+
 RUN usermod -u 1000 www-data
 RUN usermod -G staff www-data
+
