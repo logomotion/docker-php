@@ -1,7 +1,7 @@
 FROM php:7.2-fpm
  
 RUN apt-get update
-RUN apt-get install -y --no-install-recommends libxml2-dev curl openssl libpng-dev git
+RUN apt-get install -y --no-install-recommends libxml2-dev curl openssl libpng-dev git zip unzip
 RUN docker-php-ext-install mysqli
 RUN docker-php-ext-install mbstring
 RUN docker-php-ext-install json
@@ -14,6 +14,7 @@ RUN docker-php-ext-install intl
 RUN docker-php-ext-install pdo
 RUN docker-php-ext-install pdo_mysql
 RUN docker-php-ext-install gd
+RUN docker-php-ext-install zip
 
 ENV TZ=Europe/Paris
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
