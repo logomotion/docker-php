@@ -1,4 +1,4 @@
-FROM php:7.2-fpm
+FROM php:7.2-apache
  
 RUN apt-get update
 RUN apt-get install -y --no-install-recommends libxml2-dev curl openssl libpng-dev git zip unzip
@@ -29,7 +29,6 @@ RUN composer global require hirak/prestissimo
 
 RUN echo 'alias sf="php bin/console"' >> ~/.bashrc
 
-COPY www.conf /etc/php/7.2/pool.d/www.conf
 
 RUN usermod -u 1000 www-data
 RUN usermod -G staff www-data
