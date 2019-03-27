@@ -22,6 +22,8 @@ RUN printf '[PHP]\ndate.timezone = "${TZ}"\n' > /usr/local/etc/php/conf.d/tzone.
 
 RUN printf '[PHP]\nsession.auto_start = 0\n' > /usr/local/etc/php/conf.d/session.ini
 
+RUN printf '[PHP]\nmemory_limit = 512M\n' > /usr/local/etc/php/conf.d/memory.ini
+
 # Install Composer
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 RUN composer --version
