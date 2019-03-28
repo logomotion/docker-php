@@ -1,8 +1,10 @@
-FROM php:5.6-apache
+FROM php:5.4-apache
  
+# Debian mirrors removal workaround https://lists.debian.org/debian-devel-announce/2019/03/msg00006.html
+RUN sed -i '/jessie-updates/d' /etc/apt/sources.list
+
 RUN apt-get update
 RUN apt-get install -y --no-install-recommends libxml2-dev curl openssl libpng-dev git zip unzip
-RUN docker-php-ext-install mysqli
 RUN docker-php-ext-install mbstring
 RUN docker-php-ext-install json
 RUN docker-php-ext-install ctype
@@ -10,11 +12,11 @@ RUN docker-php-ext-install dom
 RUN docker-php-ext-install tokenizer
 RUN docker-php-ext-install iconv
 RUN docker-php-ext-install simplexml
-RUN docker-php-ext-install intl 
 RUN docker-php-ext-install pdo
 RUN docker-php-ext-install pdo_mysql
 RUN docker-php-ext-install gd
 RUN docker-php-ext-install zip
+RUN docker-php-ext-install mysql
 
 ENV TZ=Europe/Paris
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
@@ -24,16 +26,10 @@ RUN printf '[PHP]\nsession.auto_start = 0\n' > /usr/local/etc/php/conf.d/session
 
 RUN printf '[PHP]\nmemory_limit = 512M\n' > /usr/local/etc/php/conf.d/memory.ini
 
-# Install Composer
-RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
-RUN composer --version
-RUN composer global require hirak/prestissimo
-
-RUN echo 'alias sf="php bin/console"' >> ~/.bashrc
 
 RUN mkdir /srv/app
 WORKDIR /srv/app
-COPY vhost.conf /etc/apache2/sites-available/000-default.conf
+COPY vhost.conf /etc/apache2/sites-enabled/000-default.conf
 
 
 RUN chown -R www-data:www-data /srv/app \
