@@ -1,4 +1,4 @@
-FROM php:7.2-fpm
+FROM php:7.2-apache
  
 RUN apt-get update
 RUN apt-get install -y --no-install-recommends libxml2-dev curl openssl libpng-dev git zip unzip
@@ -22,6 +22,8 @@ RUN printf '[PHP]\ndate.timezone = "${TZ}"\n' > /usr/local/etc/php/conf.d/tzone.
 
 RUN printf '[PHP]\nsession.auto_start = 0\n' > /usr/local/etc/php/conf.d/session.ini
 
+RUN printf '[PHP]\nmemory_limit = 512M\n' > /usr/local/etc/php/conf.d/memory.ini
+
 # Install Composer
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 RUN composer --version
@@ -29,8 +31,6 @@ RUN composer global require hirak/prestissimo
 
 RUN echo 'alias sf="php bin/console"' >> ~/.bashrc
 
-COPY www.conf /etc/php/7.2/pool.d/www.conf
 
 RUN usermod -u 1000 www-data
 RUN usermod -G staff www-data
-
