@@ -1,7 +1,7 @@
 FROM php:5.6-apache
  
 RUN apt-get update
-RUN apt-get install -y --no-install-recommends libxml2-dev curl openssl libpng-dev git zip unzip
+RUN apt-get install -y --no-install-recommends libxml2-dev curl openssl libpng-dev libjpeg-dev git zip unzip
 RUN docker-php-ext-install mysqli
 RUN docker-php-ext-install mbstring
 RUN docker-php-ext-install json
